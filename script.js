@@ -1,10 +1,3 @@
-//
-//   Core Framework - Script file
-//
-//   @license    MIT (https://mit-license.org/)
-//   @author     Louis Ouellet <louis@laswitchtech.com>
-//
-
 const SearchCapture = function(){
 
     // Clone the document body so we don't modify the live DOM
@@ -84,9 +77,9 @@ const SearchIndex = function(){
         "content": SearchFilter(),
         "isPublic": PUBLIC,
     }
-    data[CSRF_KEY] = CSRF_TOKEN;
     $.ajax({
-        url: '/endpoint.php/search/index',
+        url: '/api/search/index',
+        headers: {'X-CSRF-Authorization': CSRF_KEY},
         type: 'POST',dataType: 'json',
         data: data
     });
