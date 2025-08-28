@@ -144,23 +144,34 @@ class SearchEndpoint extends Endpoint {
                     // Loop through the indexes
                     foreach($indexes as $key => $index){
 
-                        // Add the route metadata
-                        $indexes[$key]['route'] = $Router->routes($index['route'])->metadata();
+                        // Retrieve the route object and add it to the index
+                        $Route = $Router->routes($index['route']);
 
-                        // Create an excerpt from the content
-                        $indexes[$key]['excerpt'] = $this->Model->Search->excerpt($query, $index['content']);
+                        // Check if the route exists
+                        if($Route){
 
-                        // Set search score
-                        $indexes[$key]['score'] = $this->Model->Search->score($query, $indexes[$key]);
+                            // Add the route metadata
+                            $indexes[$key]['route'] = $Route->metadata();
 
-                        // Unset some fields
-                        unset($indexes[$key]['content']);
-                        unset($indexes[$key]['searchable']);
-                        unset($indexes[$key]['origin']);
-                        unset($indexes[$key]['isPublic']);
-                        unset($indexes[$key]['created']);
-                        unset($indexes[$key]['owner']);
-                        unset($indexes[$key]['locale']);
+                            // Create an excerpt from the content
+                            $indexes[$key]['excerpt'] = $this->Model->Search->excerpt($query, $index['content']);
+
+                            // Set search score
+                            $indexes[$key]['score'] = $this->Model->Search->score($query, $indexes[$key]);
+
+                            // Unset some fields
+                            unset($indexes[$key]['content']);
+                            unset($indexes[$key]['searchable']);
+                            unset($indexes[$key]['origin']);
+                            unset($indexes[$key]['isPublic']);
+                            unset($indexes[$key]['created']);
+                            unset($indexes[$key]['owner']);
+                            unset($indexes[$key]['locale']);
+                        } else {
+
+                            // Remove the index
+                            unset($indexes[$key]);
+                        }
                     }
 
                     // Sort the indexes by score and modified date
@@ -174,7 +185,7 @@ class SearchEndpoint extends Endpoint {
                         return strtotime($b['modified']) <=> strtotime($a['modified']);
                     });
 
-                    $message["data"] = $indexes;
+                    $message["data"]["results"] = $indexes;
                 } else {
                     $message = ["status" => 400, "message" => "Bad Request", "data" => "Missing Required Fields"];
                 }
