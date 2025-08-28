@@ -35,6 +35,7 @@ const SearchHighlight = function(str, query){
     return str.replace(regex, '<span class="text-bg-warning">$1</span>');
 };
 const SearchRenderer = function(query, hit){
+    console.log(query, hit);
 
     const pathText       = `${hit.route.route}${hit.segments}`;
     const highlighted    = {
