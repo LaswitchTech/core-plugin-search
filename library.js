@@ -31,25 +31,10 @@ builder.add('layouts','searchResults', class extends builder.ComponentClass {
         }
 
         // Perform Search
-        $.ajax({
-            url: '/api/search/query?query='+this._properties.query,
-            type: 'GET',dataType: 'json',
-            error: function(xhr, status, error) {
-                let color = 'info', icon = 'question-circle', title = self._builder.Locale.get(xhr.statusText), content = self._builder.Locale.get(xhr.responseText);
-                switch(xhr.status){
-                    case 403: color = 'danger'; icon = 'shield-lock'; break;
-                    case 404: color = 'warning'; icon = 'question-diamond'; break;
-                    case 500: color = 'danger'; icon = 'bug'; break;
-                }
-                self._builder.Component("alert","#layout",{icon:icon,color:color,title:title},function(alert,component){component.content.html('<pre class="m-0 p-2">'+content+'</pre>');});
-            },
-            success: function(response) {
-
-                // Add results to the layout
-                for(const [key, index] of Object.entries(response.results)){
-                    self.add(index);
-                }
-            },
+        API.endpoint('/search/query?query='+this._properties.query).execute(function(response){
+            for(const [key, index] of Object.entries(response.results)){
+                self.add(index);
+            }
         });
     }
 

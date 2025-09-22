@@ -69,7 +69,7 @@ const SearchIndex = function(){
     if (query !== null) {
         return;
     }
-    var data = {
+    API.endpoint('/search/index').data({
         "title": document.title,
         "route": window.location.pathname,
         "segments": window.location.search,
@@ -77,13 +77,7 @@ const SearchIndex = function(){
         "origin": SearchCapture(),
         "content": SearchFilter(),
         "isPublic": PUBLIC,
-    }
-    $.ajax({
-        url: '/api/search/index',
-        headers: {'X-CSRF-Authorization': CSRF_KEY},
-        type: 'POST',dataType: 'json',
-        data: data
-    });
+    }).execute();
 }
 
 // Submit current index to the server
