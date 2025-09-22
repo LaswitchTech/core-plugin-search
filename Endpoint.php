@@ -89,16 +89,16 @@ class SearchEndpoint extends Endpoint {
                         if($this->Model->Search->save($parameters['title'], $parameters['route'], $parameters['isPublic'], $parameters['segments'], $parameters['locale'], $parameters['origin'], $parameters['content'])){
 
                             // Set the message
-                            $message["data"] = "Index Saved";
+                            $message["data"] = ["Index Saved"];
                         } else {
 
                             // Set the message
-                            $message["data"] = "Nothing to update";
+                            $message["data"] = ["Nothing to update"];
                         }
                     } else {
 
                         // Set the message
-                        $message["data"] = "Nothing to update";
+                        $message["data"] = ["Nothing to update"];
                     }
                 } else {
                     $message = ["status" => 400, "message" => "Bad Request", "data" => "Missing Required Fields"];
